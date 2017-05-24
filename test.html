@@ -4,17 +4,28 @@
 <html lang="en">
 <head>
 <link rel="import"  href="one-modal.html">
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
 
 <style is="custom-style">
-  :root {
-   --one-shadow-color: green;
-   --one-shadow-blur: blur(20px);
-  }
+    :root {
+    --one-shadow-color: green;
+    --one-shadow-blur: blur(20px);
+    }
 </style>
 </head>
 <body>
-  <one-modal>
-  </one-chat>  
+    <dom-bind id="app">
+  <template>
+        <span>Open modal</span>
+        <input type="checkbox" checked="{{hostChecked::change}}">
+        <one-modal open="{{hostChecked}}" icon="menu" title="Test Title">
+            say hi to me
+            <span slot="footer">Mr. Darcy</span>
+        </one-modal> 
+  </template>
+</dom-bind>
+
 </body>
 </html>
 

@@ -7,6 +7,10 @@
 <dom-module id="one-modal">
     <template>
         <style>
+            :host {
+                z-index: 100;
+
+            }
             #content {
                 position: fixed;
                 top: 50%;
@@ -60,6 +64,15 @@
             #close:hover {
                 opacity: 0.5;
             }
+            #backdrop {
+                z-index: 0;
+                position: fixed;
+                top:0;
+                left: 0;
+                height: 100vh;
+                width: 100vw;
+                background: rgba(0,0,0,0.5);
+            }
             /*#text {*/
                 /*!*font-size: 80%;*!*/
             /*}*/
@@ -89,6 +102,7 @@
         </svg>
 
         <!--<div id="content" closed$="[[!open]]" size$="[[size]]">-->
+        <div id="backdrop" on-tap="close"></div>
         <div id="content" size$="[[size]]">
             <!--<slot name="header">-->
 
@@ -97,12 +111,12 @@
                 <div id="header-text"><iron-icon icon="[[icon]]" id="header-icon"></iron-icon>{{title}}</div>
                 <iron-icon icon="icons:close" id="close" on-tap="close"></iron-icon>
             </div>
-            <content>
+            <slot>
 
-            </content>
-            <content name="footer">
+            </slot>
+            <slot name="footer">
 
-            </content>
+            </slot>
         </div>
     </template>
 

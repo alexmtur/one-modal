@@ -15,10 +15,9 @@
     "tests"
   ],
   "dependencies": {
-      "polymer": "Polymer/polymer#latest",
-      "app-route": "polymerelements/iron-icon#latest",
-      "neon-animation": "PolymerElements/neon-animation#latest"
+    "polymer": "Polymer/polymer#latest",
+    "neon-animation": "PolymerElements/neon-animation#latest",
+    "iron-icon": "PolymerElements/iron-icon#latest"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

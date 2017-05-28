@@ -15,14 +15,14 @@
     <template>
         <span>Open modal 1</span>
         <input type="checkbox" checked="{{open1::change}}">
-        <one-modal open="{{open1}}" icon="menu" no-close-icon>
+        <one-modal open="{{open1}}" no-close-icon>
             <div slot="header">The header</div>
             <div>Some content</div>
             <div slot="footer"><button>Do something</button></div>
         </one-modal> 
         <span>Open modal 2</span>
         <input type="checkbox" checked="{{open2::change}}">
-        <one-modal open="{{open2}}" icon="menu" no-header no-footer no-backdrop>
+        <one-modal open="{{open2}}" no-header no-footer no-backdrop>
             <div slot="header">The header</div>
             <div>Some content</div>
             <div slot="footer">The footer</div>

@@ -16,8 +16,9 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#latest",
-    "neon-animation": "PolymerElements/neon-animation#latest",
-    "iron-icon": "PolymerElements/iron-icon#latest"
+    "neon-animation": "PolymerElements/neon-animation#^2.0.0",
+    "web-animations-js": "web-animations/web-animations-js#^2.2.5",
+    "one-iconset": "latest"
   },
   "devDependencies": {}
 }

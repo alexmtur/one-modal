@@ -1,15 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
-<link rel="import" href="../neon-animation/neon-animation.html">
-
+<link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../one-iconset/one-iconset.html">
 
 <dom-module id="one-modal">
     <template>
         <style>
             :host {
                 z-index: 100;
-
             }
             #content {
                 position: fixed;
@@ -17,20 +15,24 @@
                 left: 50%;
                 -webkit-transform: translate(-50%, -50%);
                 transform: translate(-50%, -50%);
-                background-color: rgba(255, 255, 255, .95);
+                background-color: var(--one-background, rgba(255, 255, 255, .95));
                 border-radius: var(--one-border-radius, 3px);
                 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
                 z-index: 1000;
                 width: 95vw;
                 height: 95vh;
+                display: flex;
+                justify-content: center;
+                align-items: space-between;
+                flex-direction: column;
                 /*padding: 10px;*/
-            }
-            #content[closed] {
-                display: none;
             }
             #content[size="m"] {
                 max-width: 500px;
                 max-height: 500px;
+            }
+            #body {
+                flex: 1;
             }
             #header {
                 display: flex;
@@ -39,27 +41,43 @@
                 border-bottom: 1px solid #f1f1f1;
                 /*background: pink;*/
             }
+            #header[hidden], #footer[hidden], #backdrop[hidden], #close[hidden] {
+                display: none;
+            }
             #header-text {
                 padding: 15px 0 15px 0;
                 text-align: center;
                 flex:1;
-                padding-left:40px;
+                /*padding-left:40px;*/
                 font-size: 120%;
                 color: #999;
             }
-            #header-icon {
+            /*#header-icon {
                 width: 30px;
                 height: auto;
                 padding-right: 20px;
+            }*/
+            #footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-top: 1px solid #f1f1f1;
+                /*background: pink;*/
             }
+
             #close {
+                position: absolute;
+                top: 0;
+                right: 0;
                 width: 20px;
                 height: auto;
+                padding: 10px;
                 /*color: lightgray;*/
                 cursor: pointer;
-                align-self: flex-start;
-                padding: 10px;
-                fill:url(#red-gradient);
+                fill: var(--one-icon-fill, #333);
+                /*align-self: flex-start;*/
+                /*padding: 10px;*/
+                /*fill:url(#red-gradient);*/
             }
             #close:hover {
                 opacity: 0.5;
@@ -73,59 +91,58 @@
                 width: 100vw;
                 background: rgba(0,0,0,0.5);
             }
-            /*#text {*/
-                /*!*font-size: 80%;*!*/
-            /*}*/
-
-            /*iron-icon {*/
-                /*display: flex;*/
-                /*width: var(--one-icon-size, 30px);*/
-                /*height: auto;*/
-                /*margin: 0;*/
-                /*!*border: solid 2px white;*!*/
-                /*!*border-radius: 30px;*!*/
-                /*!*padding: 5px;*!*/
-            /*}*/
-            /*iron-icon[hidden] {*/
-                /*display: none;*/
-            /*}*/
+            #text {
+                font-size: 80%;
+            }
+/*
+            iron-icon {
+                display: flex;
+                width: var(--one-icon-size, 30px);
+                height: auto;
+                margin: 0;
+                border: solid 2px white;
+                border-radius: 30px;
+                padding: 5px;
+                color: pink;
+            }
+            iron-icon[hidden] {
+                display: none;
+            }*/
 
         </style>
-        <!--Gradient-->
-        <svg height="0" width="0" style="position: fixed; z-index: 0;">
-            <defs>
-                <linearGradient id="red-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(255, 0, 226);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(255, 0, 107);stop-opacity:1" />
-                </linearGradient>
-            </defs>
-        </svg>
+
 
         <!--<div id="content" closed$="[[!open]]" size$="[[size]]">-->
-        <div id="backdrop" on-tap="close"></div>
+        <div id="backdrop" on-tap="close" hidden$="[[noBackdrop]]"></div>
         <div id="content" size$="[[size]]">
             <!--<slot name="header">-->
 
             <!--</slot>-->
-            <div id="header">
-                <div id="header-text"><iron-icon icon="[[icon]]" id="header-icon"></iron-icon>{{title}}</div>
-                <iron-icon icon="icons:close" id="close" on-tap="close"></iron-icon>
+            <iron-icon icon="one-iconset:close" id="close" on-tap="close" hidden$="[[noCloseIcon]]"></iron-icon>
+
+            <div id="header" hidden$="[[noHeader]]">
+                <div id="header-text">
+                    <slot name="header">
+                
+                    </slot>
+                </div> 
             </div>
-            <slot>
+            <div id="body">
+                <slot>
 
-            </slot>
-            <slot name="footer">
+                </slot>
+            </div>
+            <div id="footer" hidden$="[[noFooter]]">
+                <slot name="footer">
 
-            </slot>
+                </slot>
+            </div>
         </div>
     </template>
 
     <script>
         Polymer({
             is: 'one-modal',
-            behaviors: [
-                Polymer.NeonAnimationRunnerBehavior
-            ],
             properties: {
                 open: {
                     type: Boolean,
@@ -134,44 +151,72 @@
                     notify: true,
                     observer: '_openChanged'
                 },
-                icon: {
-                    type: String
-                },
-                title: {
-                    type: String
-                },
+                // icon: {
+                //     type: String
+                // },
+                noFooter: Boolean,
+                noHeader: Boolean,
+                noBackdrop: Boolean,
+                noCloseIcon: Boolean,
+                // title: {
+                //     type: String
+                // },
                 size: {
                     type: String,
                     value: "m"
                 },
-                entryAnimation: {
-                    value: 'fade-in-animation'
+                //We can create a class, one-animations, with static methods returning the animations we are interested in. Like open-animation = "fade in"
+                openAnimation: String,
+                closeAnimation: String,
+                duration: Number,
+                openAnimationKeyframes: {
+                    type: Array,
+                    value: [
+                        {opacity: '0'},
+                        {opacity: '1'},
+                    ]
                 },
-                exitAnimation: {
-                    value: 'fade-out-animation'
-                }
+                closeAnimationKeyframes: {
+                    type: Array,
+                    value: [
+                        {opacity: '1'},
+                        {opacity: '0'},
+                    ]
+                },
             },
             listeners: {
                 'neon-animation-finish': '_onNeonAnimationFinish'
             },
-            _onNeonAnimationFinish: function() {
+            ready: function() {
                 if (!this.open) {
                     this.style.display = 'none';
                 }
+                if(!this.openAnimation) {
+                    //change keyframes
+                }
+                if(!this.closeAnimation) {
+                    //change keyframes
+                }                
+                if(!this.duration) this.duration = 300;
             },
             _openChanged: function () {
-                if(this.open) {
-                    this.style.display = 'block';
-                    this.playAnimation('entry');
+                if(this.open && this.openAnimationKeyframes) {
+                    this.style.display = 'initial';
+                    this.animate(this.openAnimationKeyframes, this.duration);
                 }
-                else {
-                    this.playAnimation('exit');
+                else if(this.closeAnimationKeyframes) {
+                    let closeAnimationController = this.animate(this.closeAnimationKeyframes, this.duration);
+                    closeAnimationController.onfinish = () => {
+                        if (!this.open) {
+                            this.style.display = 'none';
+                        }
+                    }
                 }
             },
             close: function () {
                 this.open = false;
-                console.log('close')
             }
+
         });
     </script>
 </dom-module>

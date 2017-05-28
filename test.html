@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 <link rel="import"  href="one-modal.html">
 
@@ -27,9 +29,12 @@
             <div>Some content</div>
             <div slot="footer">The footer</div>
         </one-modal> 
+        <span>Open modal 3</span>
+        <input type="checkbox" checked="{{open3::change}}">
+        <one-modal open="{{open3}}">
+        </one-modal> 
     </template>
-</dom-bind>
-
+    </dom-bind>
 </body>
 </html>
 

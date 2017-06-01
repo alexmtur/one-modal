@@ -20,6 +20,8 @@
                 z-index: 1000;
                 width: var(--one-width, 95vw);
                 height: var(--one-height, 95vh);
+                max-width: var(--one-max-width);
+                max-height: var(--one-max-height);
                 display: flex;
                 justify-content: center;
                 align-items: space-between;
@@ -27,12 +29,16 @@
                 /*padding: 10px;*/
             }
             #content[size="m"] {
-                max-width: 500px;
-                max-height: 500px;
+                /*max-width: 500px;*/
+                /*max-height: 500px;*/
+                --one-max-width:  500px;
+                --one-max-height:  500px;
             }
             #content[size="xl"] {
-                max-width: 1500px;
-                max-height: 1500px;
+                /*max-width: 1500px;
+                max-height: 1500px;*/
+                --one-max-width:  500px;
+                --one-max-height:  500px;
             }
             #body {
                 flex: 1;

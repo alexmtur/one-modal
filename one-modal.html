@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="../one-iconset/one-iconset.html">
+<link rel="import" href="../one-class/one-class.html">
+<!-- <link rel="import" href="one-mixin.html"> -->
 
 <dom-module id="one-modal">
     <template>
@@ -122,12 +123,12 @@
 
 
         <!--<div id="content" closed$="[[!open]]" size$="[[size]]">-->
-        <div id="backdrop" on-tap="close" hidden$="[[noBackdrop]]"></div>
+        <div id="backdrop" on-click="hide" hidden$="[[noBackdrop]]"></div>
         <div id="content" size$="[[size]]">
             <!--<slot name="header">-->
 
             <!--</slot>-->
-            <iron-icon icon="one-iconset:close" id="close" on-tap="close" hidden$="[[noCloseIcon]]"></iron-icon>
+            <iron-icon icon="one-iconset:close" id="close" on-click="hide" hidden$="[[noCloseIcon]]"></iron-icon>
 
             <div id="header" hidden$="[[noHeader]]">
                 <div id="header-text">
@@ -150,82 +151,34 @@
     </template>
 
     <script>
-        Polymer({
-            is: 'one-modal',
-            properties: {
-                open: {
-                    type: Boolean,
-                    value: false,
-                    reflectToAttribute: true,
-                    notify: true,
-                    observer: '_openChanged'
-                },
-                // icon: {
-                //     type: String
-                // },
-                noFooter: Boolean,
-                noHeader: Boolean,
-                noBackdrop: Boolean,
-                noCloseIcon: Boolean,
-                // title: {
-                //     type: String
-                // },
-                size: {
-                    type: String,
-                    value: "m"
-                },
-                //We can create a class, one-animations, with static methods returning the animations we are interested in. Like open-animation = "fade in"
-                openAnimation: String,
-                closeAnimation: String,
-                duration: Number,
-                openAnimationKeyframes: {
-                    type: Array,
-                    value: [
-                        {opacity: '0'},
-                        {opacity: '1'},
-                    ]
-                },
-                closeAnimationKeyframes: {
-                    type: Array,
-                    value: [
-                        {opacity: '1'},
-                        {opacity: '0'},
-                    ]
-                },
-            },
-            listeners: {
-                'neon-animation-finish': '_onNeonAnimationFinish'
-            },
-            ready: function() {
-                if (!this.open) {
-                    this.style.display = 'none';
+        class OneModal extends OneClass { //OneMixin(Polymer.Element)
+            static get is() { return "one-modal"; }
+            static get properties() {
+                return {
+                    // icon: {
+                    //     type: String
+                    // },
+                    noFooter: Boolean,
+                    noHeader: Boolean,
+                    noBackdrop: Boolean,
+                    noCloseIcon: Boolean,
+                    // title: {
+                    //     type: String
+                    // },
+                    size: {
+                        type: String,
+                        value: "m"
+                    },
+                    entryAnimation: {
+                        value:'fade-in'
+                    },
+                    exitAnimation: {
+                        value:'fade-out'
+                    },
                 }
-                if(!this.openAnimation) {
-                    //change keyframes
-                }
-                if(!this.closeAnimation) {
-                    //change keyframes
-                }                
-                if(!this.duration) this.duration = 300;
-            },
-            _openChanged: function () {
-                if(this.open && this.openAnimationKeyframes) {
-                    this.style.display = 'initial';
-                    this.animate(this.openAnimationKeyframes, this.duration);
-                }
-                else if(this.closeAnimationKeyframes) {
-                    let closeAnimationController = this.animate(this.closeAnimationKeyframes, this.duration);
-                    closeAnimationController.onfinish = () => {
-                        if (!this.open) {
-                            this.style.display = 'none';
-                        }
-                    }
-                }
-            },
-            close: function () {
-                this.open = false;
-            }
+            }   
 
-        });
+        }
+        customElements.define(OneModal.is, OneModal);
     </script>
 </dom-module>

@@ -17,7 +17,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#latest",
     "one-iconset": "latest",
-    "neon-animation": "PolymerElements/neon-animation#^2.0.0"
+    "one-class": "latest"
   },
   "devDependencies": {}
 }
